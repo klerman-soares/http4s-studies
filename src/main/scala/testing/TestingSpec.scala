@@ -1,6 +1,5 @@
 package testing
 
-import cats.effect.IOApp.Simple
 import cats.syntax.all._
 import io.circe._
 import io.circe.syntax._
@@ -48,9 +47,7 @@ object TestingSpec {
   }
 
   // Let's define service by passing a UserRepo that returns Ok(user).
-  val success: UserRepo[IO] = new UserRepo[IO] {
-    def find(id: String): IO[Option[User]] = IO.pure(Some(User("johndoe", 42)))
-  }
+  val success: UserRepo[IO] = (id: String) => IO.pure(Some(User("johndoe", 42)))
 
   val response: IO[Response[IO]] = httpRoutes[IO](success).orNotFound.run(
     Request(method = Method.GET, uri = uri"/user/not-used" )
@@ -89,4 +86,14 @@ object TestingSpec {
 
   check[String](respNotFound, Status.NotFound, Some("Not found"))
   // res2: Boolean = true
+
+  val httpApp: HttpApp[IO] = httpRoutes[IO](success).orNotFound
+
+  import org.http4s.client.Client
+
+  val request: Request[IO] = Request(method = Method.GET, uri = uri"/user/not-used")
+  val client: Client[IO] = Client.fromHttpApp(httpApp)
+
+  val resp: IO[Json]     = client.expect[Json](request)
+  assert(resp.unsafeRunSync() == expectedJson)
 }

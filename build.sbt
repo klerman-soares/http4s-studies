@@ -4,7 +4,7 @@ ThisBuild / scalaVersion := "2.13.8"
 
 lazy val root = (project in file("."))
   .settings(
-    name := "Http4sStudies"
+    name := "http4s-studies"
   )
 
 val Http4sVersion = "1.0.0-M21"

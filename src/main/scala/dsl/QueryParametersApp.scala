@@ -13,8 +13,7 @@ object QueryParametersApp extends IOApp {
 
   object CountryQueryParamMatcher extends QueryParamDecoderMatcher[String]("country")
 
-  implicit val yearQueryParamDecoder: QueryParamDecoder[Year] =
-    QueryParamDecoder[Int].map(Year.of)
+  implicit val yearQueryParamDecoder: QueryParamDecoder[Year] = QueryParamDecoder[Int].map(Year.of)
 
   object YearQueryParamMatcher extends QueryParamDecoderMatcher[Year]("year")
 
