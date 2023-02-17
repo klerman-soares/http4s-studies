@@ -16,10 +16,7 @@ object HelloEveryoneApp extends IOApp.Simple {
   }
 
   val inputs = List("Ember", "http4s", "Scala")
-
-  val getGreetings: IO[List[String]] =
-    inputs.parTraverse(hello)
-
+  val getGreetings: IO[List[String]] = inputs.parTraverse(hello)
 
   val run: IO[Unit] = EmberClientBuilder
     .default[IO]

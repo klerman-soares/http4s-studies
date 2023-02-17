@@ -1,21 +1,21 @@
 package client
 
-import cats.effect.{ExitCode, IO, IOApp}
+import cats.effect.{IO, IOApp}
+import com.comcast.ip4s._
 import org.http4s.HttpRoutes
 import org.http4s.Method.GET
 import org.http4s.client.Client
-import org.http4s.ember.client.EmberClientBuilder
 import org.http4s.dsl.io._
+import org.http4s.ember.client.EmberClientBuilder
 import org.http4s.ember.server.EmberServerBuilder
 import org.http4s.implicits._
-import com.comcast.ip4s._
 
 object CallingExternalApiApp extends IOApp.Simple {
 
   val helloWorldService = (client: Client[IO]) => HttpRoutes.of[IO] {
     case GET -> Root =>
-      val helloEmber: IO[String] =
-        client.expect[String]("https://www.boredapi.com/api/activity")
+      val url = "https://www.boredapi.com/api/activity"
+      val helloEmber: IO[String] = client.expect[String](url)
       Ok(helloEmber)
   }.orNotFound
 
